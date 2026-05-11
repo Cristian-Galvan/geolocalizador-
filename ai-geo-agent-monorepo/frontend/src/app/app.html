@@ -1,0 +1,77 @@
+<!-- Navigation Bar -->
+<nav class="navbar">
+  <div class="navbar-content">
+    <div class="navbar-header">
+      <!-- Logo -->
+      <div class="navbar-logo">
+        <span class="navbar-logo-icon">🌍</span>
+        <h1 class="navbar-title">{{ title() }}</h1>
+      </div>
+
+      <!-- Desktop Navigation Links -->
+      <div *ngIf="isLoggedIn()" class="navbar-links">
+        <a routerLink="/chat" 
+           routerLinkActive="active"
+           class="navbar-link">
+          💬 Chat
+        </a>
+        <a routerLink="/history" 
+           routerLinkActive="active"
+           class="navbar-link">
+          📋 Historial
+        </a>
+        <a routerLink="/ratings" 
+           routerLinkActive="active"
+           class="navbar-link">
+          ⭐ Calificaciones
+        </a>
+
+        <!-- User Menu -->
+        <div class="user-menu">
+          <span class="user-name">{{ currentUser()?.username }}</span>
+          <button
+            (click)="logout()"
+            class="logout-button"
+          >
+            🚪 Salir
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <button *ngIf="isLoggedIn()" class="mobile-menu-button">
+        ☰
+      </button>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <div *ngIf="isLoggedIn()" class="mobile-nav">
+      <a routerLink="/chat" 
+         routerLinkActive="active"
+         class="mobile-nav-link">
+        💬 Chat
+      </a>
+      <a routerLink="/history" 
+         routerLinkActive="active"
+         class="mobile-nav-link">
+        📋 Historial
+      </a>
+      <a routerLink="/ratings" 
+         routerLinkActive="active"
+         class="mobile-nav-link">
+        ⭐ Calificaciones
+      </a>
+      <button
+        (click)="logout()"
+        class="mobile-nav-link-button"
+      >
+        🚪 Salir
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<div class="main-content">
+  <router-outlet></router-outlet>
+</div>

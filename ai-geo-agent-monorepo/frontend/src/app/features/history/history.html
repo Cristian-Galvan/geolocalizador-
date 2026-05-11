@@ -1,0 +1,72 @@
+<div class="history-container">
+  <div class="history-wrapper">
+    <!-- Header -->
+    <div class="history-header">
+      <h1 class="history-title">📋 Historial de Búsquedas</h1>
+      <p class="history-subtitle">Revisa todas tus búsquedas anteriores y descubre nuevos lugares</p>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading()" class="history-loading">
+      <div class="spinner"></div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading() && searchHistory().length === 0" class="history-empty">
+      <p class="empty-text">Aún no hay búsquedas</p>
+      <a routerLink="/chat" class="empty-button">
+        🔍 Hacer una búsqueda
+      </a>
+    </div>
+
+    <!-- History List -->
+    <div *ngIf="!isLoading() && searchHistory().length > 0" class="history-grid">
+      <!-- Search Items -->
+      <div>
+        <div class="search-list-container">
+          <div class="search-list-header">Tus Búsquedas</div>
+          <div class="search-list">
+            <button *ngFor="let query of searchHistory()"
+                    (click)="selectQuery(query)"
+                    [class.active]="selectedQuery()?.id === query.id"
+                    class="search-item">
+              <p class="search-item-title">{{ query.prompt }}</p>
+              <p class="search-item-address">📍 {{ query.address }}</p>
+              <p class="search-item-date">{{ query.timestamp | date:'short' }}</p>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Selected Query Details -->
+      <div *ngIf="selectedQuery()">
+        <div class="query-details">
+          <h2 class="query-title">{{ selectedQuery()?.prompt }}</h2>
+          <p class="query-info">📍 Ubicación: {{ selectedQuery()?.address }}</p>
+          <p class="query-date">Búsqueda realizada: {{ selectedQuery()?.timestamp | date:'medium' }}</p>
+          <p class="query-response">{{ selectedQuery()?.response }}</p>
+        </div>
+
+        <!-- Delete Query Button -->
+        <button (click)="deleteQuery(selectedQuery()!.id)"
+                class="delete-button">
+          🗑️ Eliminar esta búsqueda
+        </button>
+      </div>
+
+      <!-- Empty Selection State -->
+      <div *ngIf="!selectedQuery()" class="empty-selection">
+        <div class="empty-selection-text">
+          <p>Selecciona una búsqueda para ver los detalles</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Back Button -->
+    <div>
+      <a routerLink="/chat" class="back-button">
+        ← Volver al chat
+      </a>
+    </div>
+  </div>
+</div>

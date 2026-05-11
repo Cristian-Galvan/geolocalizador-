@@ -1,0 +1,117 @@
+<div class="chat-container">
+  <!-- Header -->
+  <div class="chat-header">
+    <h1 class="chat-title">🌍 Explorador de Lugares</h1>
+    <p class="chat-subtitle">Pregunta al agente IA dónde ir según tu ubicación</p>
+  </div>
+
+  <!-- Chat History -->
+  <div class="chat-content">
+    <!-- Messages -->
+    <div *ngFor="let message of chatHistory()" class="message-group">
+      <!-- User Message -->
+      <div *ngIf="message.type === 'user'" class="user-message-container">
+        <div class="user-message">
+          <p class="user-text">{{ message.text }}</p>
+          <p class="user-address">📍 {{ message.address }}</p>
+        </div>
+      </div>
+
+      <!-- Bot Message with Places -->
+      <div *ngIf="message.type === 'bot'" class="bot-message">
+        <p class="bot-label">🤖 Recomendaciones basadas en tu ubicación:</p>
+
+        <!-- Places Grid -->
+        <div class="places-grid">
+          <app-place-card 
+            *ngFor="let place of message.places"
+            [place]="place"
+            (onRate)="openRatingModal($event)">
+          </app-place-card>
+        </div>
+
+        <div class="search-location-info">
+          <p class="search-text">
+            <span class="search-label">Búsqueda realizada en:</span> {{ message.address }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="chatHistory().length === 0" class="empty-state">
+      <div class="empty-icon">🗺️</div>
+      <p class="empty-title">Comienza a explorar haciendo una pregunta</p>
+      <div class="examples-label">Ejemplos:</div>
+      <ul class="examples-list">
+        <li>• "Muéstrame restaurantes cercanos"</li>
+        <li>• "¿Dónde hay cafeterías buenas?"</li>
+        <li>• "Museos interesantes por aquí"</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Input Bar (Fixed at bottom) -->
+  <div class="input-bar">
+    <div class="input-container">
+      <input
+        [ngModel]="userInput()"
+        (ngModelChange)="userInput.set($event)"
+        (keyup.enter)="sendQuery()"
+        placeholder="¿A dónde vamos hoy, Bruce?"
+        class="chat-input"
+      />
+
+      <button
+        (click)="sendQuery()"
+        [disabled]="isLoading()"
+        class="send-button"
+      >
+        <span *ngIf="!isLoading()">🚀</span>
+        <div *ngIf="isLoading()" class="spinner"></div>
+      </button>
+    </div>
+  </div>
+
+  <!-- Rating Modal -->
+  <div *ngIf="showRatingModal()" class="modal-overlay">
+    <div class="modal-content">
+      <h2 class="modal-title">Califica este lugar</h2>
+      <p class="modal-subtitle">{{ selectedPlaceForRating()?.name }}</p>
+
+      <!-- Star Rating -->
+      <div class="stars-container">
+        <button
+          *ngFor="let i of [1, 2, 3, 4, 5]"
+          (click)="setRating(i)"
+          class="star-button"
+          [class.inactive]="ratingValue() < i"
+        >
+          ⭐
+        </button>
+      </div>
+
+      <!-- Comment -->
+      <div class="comment-section">
+        <label class="comment-label">Comentario (opcional)</label>
+        <textarea
+          [ngModel]="ratingComment()"
+          (ngModelChange)="ratingComment.set($event)"
+          placeholder="Cuéntanos tu experiencia..."
+          class="comment-textarea"
+          rows="3"
+        ></textarea>
+      </div>
+
+      <!-- Buttons -->
+      <div class="buttons-container">
+        <button (click)="submitRating()" class="btn-submit">
+          Enviar Calificación
+        </button>
+        <button (click)="closeRatingModal()" class="btn-cancel">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

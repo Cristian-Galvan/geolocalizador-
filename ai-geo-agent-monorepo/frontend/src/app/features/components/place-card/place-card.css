@@ -1,0 +1,136 @@
+:host {
+  display: block;
+}
+
+/* Place Card Container */
+.place-card {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(20, 25, 52, 0.8));
+  border: 1px solid rgba(79, 70, 229, 0.3);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(79, 70, 229, 0.1);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: slideInUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.place-card:hover {
+  border-color: rgba(96, 165, 250, 0.5);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(37, 99, 235, 0.25), inset 0 1px 0 rgba(79, 70, 229, 0.2);
+}
+
+/* Place Card Header */
+.place-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.place-card-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #ffffff;
+  transition: color 0.3s ease;
+  letter-spacing: -0.3px;
+}
+
+.place-card:hover .place-card-title {
+  color: #60a5fa;
+}
+
+.place-card-badge {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(79, 70, 229, 0.3));
+  color: #93c5fd;
+  font-size: 0.65rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border: 1px solid rgba(96, 165, 250, 0.3);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* Place Card Description */
+.place-card-description {
+  color: #cbd5e1;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  font-weight: 400;
+}
+
+/* Place Card Actions */
+.place-card-actions {
+  display: flex;
+  gap: 0.875rem;
+}
+
+/* Action Links */
+.place-card-link {
+  flex: 1;
+  text-align: center;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(79, 70, 229, 0.15));
+  color: #cbd5e1;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.75rem 0.875rem;
+  border-radius: 0.75rem;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(79, 70, 229, 0.3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.place-card-link:hover {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(79, 70, 229, 0.25));
+  color: #60a5fa;
+  border-color: rgba(96, 165, 250, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Rate Button */
+.place-card-button {
+  flex: 1;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.75rem 0.875rem;
+  border-radius: 0.75rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.place-card-button:hover {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+}
+
+.place-card-button:active {
+  transform: translateY(0px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .place-card {
+    padding: 1rem;
+  }
+
+  .place-card-title {
+    font-size: 1rem;
+  }
+}

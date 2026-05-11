@@ -1,0 +1,220 @@
+/* Navigation Bar */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(13, 18, 40, 0.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(79, 70, 229, 0.2);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(79, 70, 229, 0.1);
+}
+
+.navbar-content {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
+}
+
+.navbar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.navbar-logo-icon {
+  font-size: 1.5rem;
+  animation: glow 3s ease-in-out infinite;
+}
+
+.navbar-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+  justify-content: flex-start;
+  background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Desktop Navigation Links */
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+}
+
+.navbar-link {
+  color: #cbd5e1;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.navbar-link:hover {
+  color: #ffffff;
+  background-color: rgba(79, 70, 229, 0.15);
+}
+
+.navbar-link.active {
+  color: #60a5fa;
+  background-color: rgba(96, 165, 250, 0.15);
+  box-shadow: inset 0 0 0 1px rgba(96, 165, 250, 0.3);
+}
+
+/* User Menu */
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding-left: 1.5rem;
+  border-left: 1px solid rgba(79, 70, 229, 0.3);
+}
+
+.user-name {
+  color: #94a3b8;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.logout-button {
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: #ffffff;
+  border: none;
+  border-radius: 0.625rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 0.875rem;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.logout-button:hover {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+}
+
+/* Mobile Menu Button */
+.mobile-menu-button {
+  display: none;
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* Mobile Navigation */
+.mobile-nav {
+  display: none;
+  margin-top: 1rem;
+  padding-bottom: 0.5rem;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.mobile-nav-link {
+  display: block;
+  padding: 0.75rem 1rem;
+  color: #cbd5e1;
+  text-decoration: none;
+  border-radius: 0.625rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 500;
+}
+
+.mobile-nav-link:hover {
+  background-color: rgba(79, 70, 229, 0.2);
+  color: #ffffff;
+  transform: translateX(4px);
+}
+
+.mobile-nav-link.active {
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.2), rgba(79, 70, 229, 0.2));
+  color: #60a5fa;
+  box-shadow: inset 0 0 0 1px rgba(96, 165, 250, 0.3);
+}
+
+.mobile-nav-link-button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 0.625rem;
+  border: none;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+/* Main Content */
+.main-content {
+  background-color: transparent;
+  min-height: 100vh;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .navbar-links {
+    display: none;
+  }
+
+  .mobile-menu-button {
+    display: block;
+  }
+
+  .mobile-nav {
+    display: flex;
+  }
+
+  .user-menu {
+    display: none;
+  }
+
+  .mobile-nav-link-button {
+    width: 100%;
+    text-align: left;
+    padding: 0.5rem 1rem;
+    background-color: #dc2626;
+    color: #ffffff;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .mobile-nav-link-button:hover {
+    background-color: #b91c1c;
+  }
+}
+
+/* Navigation Links for Desktop */
+@media (min-width: 768px) {
+  .navbar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .navbar-links {
+    display: flex;
+  }
+}

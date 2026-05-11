@@ -1,0 +1,20 @@
+<div class="place-card">
+  <div class="place-card-header">
+    <h3 class="place-card-title">{{ place.name }}</h3>
+    <span class="place-card-badge">Recomendado</span>
+  </div>
+
+  <p class="place-card-description">
+    {{ place.description }}
+  </p>
+
+  <div class="place-card-actions">
+    <a [href]="place.url" target="_blank" class="place-card-link">
+      🗺️ Ver Mapa
+    </a>
+
+    <button (click)="emitRating()" class="place-card-button">
+      ⭐ Calificar
+    </button>
+  </div>
+</div>
