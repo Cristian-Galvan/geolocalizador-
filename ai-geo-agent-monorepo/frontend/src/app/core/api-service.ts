@@ -5,7 +5,7 @@ import { AuthService } from './auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
-  private baseUrl = 'http://127.0.0.1:8000';
+private baseUrl = 'https://geolocalizador-production-1c75.up.railway.app';
   private authService = inject(AuthService);
   private http = inject(HttpClient);
 
