@@ -4,36 +4,67 @@
 
 /* Place Card Container */
 .place-card {
-  background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(20, 25, 52, 0.8));
-  border: 1px solid rgba(79, 70, 229, 0.3);
-  border-radius: 1.5rem;
-  padding: 1.5rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(79, 70, 229, 0.1);
-  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  animation: slideInUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  background: linear-gradient(135deg, rgba(17, 24, 39, 0.98), rgba(15, 23, 42, 0.98));
+  border: 2px solid rgba(59, 130, 246, 0.35);
+  border-radius: 1.25rem;
+  padding: 1.25rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(96, 165, 250, 0.1);
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: slideInUp 0.5s ease-out;
+  overflow: hidden;
+  position: relative;
+}
+
+.place-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(96, 165, 250, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.place-card:hover::before {
+  left: 100%;
 }
 
 .place-card:hover {
-  border-color: rgba(96, 165, 250, 0.5);
+  border-color: rgba(96, 165, 250, 0.6);
   transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(37, 99, 235, 0.25), inset 0 1px 0 rgba(79, 70, 229, 0.2);
+  box-shadow: 0 16px 48px rgba(37, 99, 235, 0.35), inset 0 1px 1px rgba(96, 165, 250, 0.2);
 }
 
 /* Place Card Header */
 .place-card-header {
   display: flex;
-  justify-content: space-between;
   align-items: flex-start;
+  gap: 0.875rem;
   margin-bottom: 1rem;
-  gap: 1rem;
+}
+
+.category-icon {
+  font-size: 2.5rem;
+  flex-shrink: 0;
+  animation: bounce 0.6s ease-out;
+  filter: drop-shadow(0 2px 4px rgba(96, 165, 250, 0.2));
+}
+
+.place-card-title-section {
+  flex: 1;
+  min-width: 0;
 }
 
 .place-card-title {
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-size: 1.125rem;
+  font-weight: 900;
   color: #ffffff;
   transition: color 0.3s ease;
   letter-spacing: -0.3px;
+  margin: 0 0 0.4rem 0;
+  line-height: 1.3;
+  word-wrap: break-word;
 }
 
 .place-card:hover .place-card-title {
@@ -41,96 +72,374 @@
 }
 
 .place-card-badge {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(79, 70, 229, 0.3));
-  color: #93c5fd;
-  font-size: 0.65rem;
-  padding: 0.375rem 0.75rem;
-  border-radius: 9999px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.35), rgba(79, 70, 229, 0.3));
+  color: #a5f3fc;
+  font-size: 0.6rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  border: 1px solid rgba(96, 165, 250, 0.3);
-  font-weight: 700;
-  flex-shrink: 0;
+  letter-spacing: 0.12em;
+  border: 1px solid rgba(96, 165, 250, 0.5);
+  font-weight: 800;
+  display: inline-block;
+  white-space: nowrap;
 }
 
 /* Place Card Description */
 .place-card-description {
   color: #cbd5e1;
-  font-size: 0.875rem;
-  line-height: 1.6;
-  margin-bottom: 1.5rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
   font-weight: 400;
+}
+
+/* Details Section */
+.place-card-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+  padding: 0.875rem;
+  background: rgba(59, 130, 246, 0.08);
+  border-left: 3px solid rgba(59, 130, 246, 0.5);
+  border-radius: 0.625rem;
+}
+
+.detail-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+}
+
+.detail-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.detail-text {
+  color: #a5f3fc;
+  font-size: 0.8rem;
+  font-weight: 500;
+  word-break: break-word;
+  line-height: 1.4;
+}
+
+/* Place Card Info */
+.place-card-info {
+  display: flex;
+  gap: 0.7rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: linear-gradient(135deg, rgba(30, 144, 255, 0.12), rgba(79, 70, 229, 0.08));
+  padding: 0.5rem 0.8rem;
+  border-radius: 0.6rem;
+  border: 1.5px solid rgba(96, 165, 250, 0.25);
+  transition: all 0.3s ease;
+  flex: 1;
+  min-width: 120px;
+}
+
+.info-item:hover {
+  border-color: rgba(96, 165, 250, 0.5);
+  background: linear-gradient(135deg, rgba(30, 144, 255, 0.18), rgba(79, 70, 229, 0.12));
+}
+
+.info-icon {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.info-text {
+  color: #a5f3fc;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
 }
 
 /* Place Card Actions */
 .place-card-actions {
-  display: flex;
-  gap: 0.875rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.7rem;
+  width: 100%;
 }
 
-/* Action Links */
+/* Map Link */
 .place-card-link {
-  flex: 1;
+  grid-column: 1 / -1;
   text-align: center;
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(79, 70, 229, 0.15));
-  color: #cbd5e1;
-  font-size: 0.8rem;
-  font-weight: 700;
-  padding: 0.75rem 0.875rem;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(79, 70, 229, 0.25));
+  color: #a5f3fc;
+  font-size: 0.85rem;
+  font-weight: 800;
+  padding: 0.8rem 1rem;
   border-radius: 0.75rem;
   text-decoration: none;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid rgba(79, 70, 229, 0.3);
+  border: 2px solid rgba(59, 130, 246, 0.5);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
+  font-family: inherit;
 }
 
 .place-card-link:hover {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(79, 70, 229, 0.25));
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.5), rgba(79, 70, 229, 0.4));
+  color: #ffffff;
+  border-color: rgba(96, 165, 250, 0.8);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+}
+
+.place-card-link:active {
+  transform: translateY(-1px);
+}
+
+/* Icon Action Buttons */
+.action-icon-btn {
+  position: relative;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(79, 70, 229, 0.1));
+  color: #a5f3fc;
+  font-size: 1.3rem;
+  padding: 0.7rem;
+  border-radius: 0.75rem;
+  border: 2px solid rgba(79, 70, 229, 0.3);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-icon-btn:hover {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(79, 70, 229, 0.2));
+  border-color: rgba(96, 165, 250, 0.6);
   color: #60a5fa;
-  border-color: rgba(96, 165, 250, 0.4);
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.action-icon-btn:active {
+  transform: translateY(0px);
+}
+
+.icon-text {
+  display: block;
+}
+
+.tooltip {
+  display: none;
+}
+
+.copy-btn.copied {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.3), rgba(22, 163, 74, 0.2));
+  border-color: rgba(34, 197, 94, 0.7);
+  color: #86efac;
 }
 
 /* Rate Button */
 .place-card-button {
-  flex: 1;
+  grid-column: 1 / -1;
   background: linear-gradient(135deg, #3b82f6, #2563eb);
   color: #ffffff;
-  font-size: 0.8rem;
-  font-weight: 700;
-  padding: 0.75rem 0.875rem;
+  font-size: 0.85rem;
+  font-weight: 800;
+  padding: 0.8rem 1rem;
   border-radius: 0.75rem;
   border: none;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  font-family: inherit;
 }
 
 .place-card-button:hover {
   background: linear-gradient(135deg, #2563eb, #1d4ed8);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.45);
 }
 
 .place-card-button:active {
   transform: translateY(0px);
 }
 
-/* Responsive */
+/* Animations */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.12) rotate(-3deg);
+  }
+}
+
+/* Responsive Design - Tablets */
 @media (max-width: 768px) {
   .place-card {
-    padding: 1rem;
+    padding: 1.125rem;
+    border-radius: 1rem;
+  }
+
+  .place-card-header {
+    margin-bottom: 0.875rem;
+    gap: 0.75rem;
+  }
+
+  .category-icon {
+    font-size: 2rem;
   }
 
   .place-card-title {
+    font-size: 1.05rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .place-card-description {
+    font-size: 0.8rem;
+    margin-bottom: 0.875rem;
+  }
+
+  .place-card-details {
+    padding: 0.75rem;
+    margin-bottom: 0.875rem;
+    gap: 0.5rem;
+  }
+
+  .detail-text {
+    font-size: 0.75rem;
+  }
+
+  .place-card-info {
+    margin-bottom: 1rem;
+  }
+
+  .place-card-actions {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+  }
+
+  .place-card-link {
+    grid-column: 1 / -1;
+    padding: 0.7rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* Responsive Design - Mobile */
+@media (max-width: 480px) {
+  .place-card {
+    padding: 1rem;
+    border-radius: 0.875rem;
+  }
+
+  .place-card-header {
+    gap: 0.6rem;
+  }
+
+  .category-icon {
+    font-size: 1.875rem;
+  }
+
+  .place-card-title {
+    font-size: 0.95rem;
+    font-weight: 800;
+  }
+
+  .place-card-badge {
+    font-size: 0.55rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .place-card-description {
+    font-size: 0.75rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+  }
+
+  .place-card-details {
+    padding: 0.7rem;
+    margin-bottom: 0.75rem;
+    gap: 0.4rem;
+  }
+
+  .detail-item {
+    gap: 0.4rem;
+  }
+
+  .detail-text {
+    font-size: 0.7rem;
+  }
+
+  .place-card-info {
+    margin-bottom: 0.875rem;
+    gap: 0.5rem;
+  }
+
+  .info-item {
+    min-width: 100px;
+    padding: 0.45rem 0.65rem;
+    font-size: 0.75rem;
+  }
+
+  .info-icon {
     font-size: 1rem;
+  }
+
+  .info-text {
+    font-size: 0.75rem;
+  }
+
+  .place-card-actions {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  .place-card-link {
+    grid-column: 1 / -1;
+    padding: 0.65rem;
+    font-size: 0.8rem;
+    gap: 0.4rem;
+  }
+
+  .place-card-link span:last-child {
+    display: none;
+  }
+
+  .action-icon-btn {
+    padding: 0.6rem;
+    font-size: 1.1rem;
+  }
+
+  .place-card-button {
+    grid-column: 1 / -1;
+    padding: 0.65rem;
+    font-size: 0.8rem;
+    gap: 0.3rem;
   }
 }

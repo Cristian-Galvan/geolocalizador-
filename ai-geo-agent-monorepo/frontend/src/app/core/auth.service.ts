@@ -27,6 +27,25 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) {
     this.loadAuthState();
+    this.validateSession();
+  }
+
+  private validateSession() {
+    // Validar que el token sea válido haciendo una petición al backend
+    if (this.getToken()) {
+      this.http.get<any>(`${this.apiUrl}/me`, {
+        headers: this.getAuthHeaders()
+      }).subscribe({
+        next: (user) => {
+          this.currentUser.set(user);
+          this.isLoggedIn.set(true);
+        },
+        error: () => {
+          // Token inválido o expirado, limpiar
+          this.logout();
+        }
+      });
+    }
   }
 
   private loadAuthState() {
@@ -69,6 +88,14 @@ export class AuthService {
     this.isLoggedIn.set(false);
     this.currentUser.set(null);
     this.router.navigate(['/login']);
+  }
+
+  clearSession() {
+    // Limpia la sesión sin navegar (usado por el interceptor)
+    localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.userKey);
+    this.isLoggedIn.set(false);
+    this.currentUser.set(null);
   }
 
   getToken(): string | null {

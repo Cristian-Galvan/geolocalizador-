@@ -7,6 +7,12 @@ class PlaceModel(BaseModel):
     description: str
     category: str
     url: str
+    address: Optional[str] = None  # Dirección exacta
+    phone: Optional[str] = None    # Teléfono
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
+    distance: Optional[float] = None  # Distancia en km
+    duration: Optional[int] = None    # Tiempo en minutos
 
 class QueryRequest(BaseModel):
     prompt: str = Field(..., min_length=3, max_length=500)

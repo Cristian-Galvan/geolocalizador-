@@ -7,7 +7,7 @@ from pydantic import BaseModel
 # Configuración
 SECRET_KEY = "your-secret-key-change-in-production"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = 10080  # 7 días
 
 # Context para hash de contraseñas (usando argon2 para mejor seguridad)
 pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")

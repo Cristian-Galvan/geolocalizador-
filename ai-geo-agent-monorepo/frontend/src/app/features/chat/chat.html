@@ -14,6 +14,7 @@
         <div class="user-message">
           <p class="user-text">{{ message.text }}</p>
           <p class="user-address">📍 {{ message.address }}</p>
+          <span class="message-time" *ngIf="message.timestamp">{{ message.timestamp }}</span>
         </div>
       </div>
 
@@ -39,15 +40,40 @@
     </div>
 
     <!-- Empty State -->
-    <div *ngIf="chatHistory().length === 0" class="empty-state">
+    <div *ngIf="chatHistory().length === 0 && !isLoading()" class="empty-state">
       <div class="empty-icon">🗺️</div>
       <p class="empty-title">Comienza a explorar haciendo una pregunta</p>
-      <div class="examples-label">Ejemplos:</div>
-      <ul class="examples-list">
-        <li>• "Muéstrame restaurantes cercanos"</li>
-        <li>• "¿Dónde hay cafeterías buenas?"</li>
-        <li>• "Museos interesantes por aquí"</li>
-      </ul>
+      <div class="examples-label">Sugerencias:</div>
+      <div class="quick-suggestions">
+        <button 
+          *ngFor="let suggestion of suggestions"
+          (click)="sendQuery(suggestion)"
+          class="suggestion-btn">
+          {{ suggestion }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading()" class="loading-state">
+      <div class="loading-icon">🤖</div>
+      <p class="loading-title">Buscando los mejores lugares...</p>
+      <p class="loading-subtitle">Esto puede tomar un momento (máx. 45 segundos)</p>
+      <div class="loading-dots">
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+    </div>
+
+    <!-- Tools -->
+    <div *ngIf="chatHistory().length > 0 && !isLoading()" class="chat-tools">
+      <button (click)="downloadHistoryAsJSON()" class="tool-btn download-btn" title="Descargar historial">
+        💾 Descargar
+      </button>
+      <button (click)="clearHistory()" class="tool-btn clear-btn" title="Limpiar historial">
+        🗑️ Limpiar
+      </button>
     </div>
   </div>
 
@@ -56,11 +82,21 @@
     <div class="input-container">
       <input
         [ngModel]="userInput()"
-        (ngModelChange)="userInput.set($event)"
+        (ngModelChange)="onInputChange($event)"
         (keyup.enter)="sendQuery()"
-        placeholder="¿A dónde vamos hoy, Bruce?"
+        placeholder="¿A dónde vamos hoy?"
         class="chat-input"
       />
+
+      <!-- Suggestions Dropdown -->
+      <div *ngIf="filteredSuggestions().length > 0" class="suggestions-dropdown">
+        <button 
+          *ngFor="let suggestion of filteredSuggestions()"
+          (click)="sendQuery(suggestion)"
+          class="suggestion-item">
+          {{ suggestion }}
+        </button>
+      </div>
 
       <button
         (click)="sendQuery()"

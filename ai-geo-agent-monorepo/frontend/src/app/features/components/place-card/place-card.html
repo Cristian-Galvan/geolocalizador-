@@ -1,20 +1,57 @@
 <div class="place-card">
   <div class="place-card-header">
-    <h3 class="place-card-title">{{ place.name }}</h3>
-    <span class="place-card-badge">Recomendado</span>
+    <span class="category-icon">{{ getCategoryIcon() }}</span>
+    <div class="place-card-title-section">
+      <h3 class="place-card-title">{{ place.name }}</h3>
+      <span class="place-card-badge">{{ place.category || 'Lugar' }}</span>
+    </div>
   </div>
 
   <p class="place-card-description">
     {{ place.description }}
   </p>
 
+  <div class="place-card-details" *ngIf="place.address || place.phone">
+    <div class="detail-item" *ngIf="place.address">
+      <span class="detail-icon">📍</span>
+      <span class="detail-text">{{ place.address }}</span>
+    </div>
+    <div class="detail-item" *ngIf="place.phone">
+      <span class="detail-icon">☎️</span>
+      <span class="detail-text">{{ place.phone }}</span>
+    </div>
+  </div>
+
+  <div class="place-card-info" *ngIf="place.distance !== undefined || place.duration !== undefined">
+    <div class="info-item" *ngIf="place.distance !== undefined">
+      <span class="info-icon">📍</span>
+      <span class="info-text">{{ place.distance | number:'1.1-1' }} km</span>
+    </div>
+    <div class="info-item" *ngIf="place.duration !== undefined">
+      <span class="info-icon">⏱️</span>
+      <span class="info-text">~{{ place.duration }} min</span>
+    </div>
+  </div>
+
   <div class="place-card-actions">
-    <a [href]="place.url" target="_blank" class="place-card-link">
-      🗺️ Ver Mapa
+    <a [href]="getMapUrl()" target="_blank" class="place-card-link" title="Abrir en Google Maps">
+      <span>🗺️</span>
+      <span>Ver Mapa</span>
     </a>
 
+    <button (click)="copyAddress()" [class.copied]="copied()" class="action-icon-btn copy-btn" title="Copiar dirección">
+      <span class="icon-text">{{ copied() ? '✅' : '📋' }}</span>
+      <span class="tooltip">{{ copied() ? 'Copiado' : 'Copiar' }}</span>
+    </button>
+
+    <button (click)="shareToWhatsApp()" class="action-icon-btn share-btn" title="Compartir en WhatsApp">
+      <span class="icon-text">💬</span>
+      <span class="tooltip">WhatsApp</span>
+    </button>
+
     <button (click)="emitRating()" class="place-card-button">
-      ⭐ Calificar
+      <span>⭐</span>
+      <span>Calificar</span>
     </button>
   </div>
 </div>
