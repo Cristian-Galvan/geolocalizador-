@@ -18,7 +18,7 @@ interface LoginResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:8000/api/auth';
+  private apiUrl = 'https://geolocalizador-production-1c75.up.railway.app/api/auth';
   private tokenKey = 'auth_token';
   private userKey = 'auth_user';
 

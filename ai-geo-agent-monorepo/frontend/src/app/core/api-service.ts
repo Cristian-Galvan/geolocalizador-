@@ -5,7 +5,7 @@ import { AuthService } from './auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
-private baseUrl = 'https://geolocalizador-production-1c75.up.railway.app';
+  private baseUrl = 'https://geolocalizador-production-1c75.up.railway.app';
   private authService = inject(AuthService);
   private http = inject(HttpClient);
 
@@ -18,7 +18,7 @@ private baseUrl = 'https://geolocalizador-production-1c75.up.railway.app';
     }
     
     return headers;
-  }
+  } 
 
   // Pide recomendaciones al agente
   askAgent(prompt: string, lat: number, lng: number): Observable<any> {
