@@ -153,7 +153,7 @@ async def delete_history(
     return {"message": "Registro eliminado"}
 
 
-@app.post("/visited", response_model=schemas.VisitedPlaceResponse)
+@app.post("/ratings", response_model=schemas.VisitedPlaceResponse)
 async def rate_place(
     item: schemas.VisitedPlaceCreate,
     db: Session = Depends(get_db),

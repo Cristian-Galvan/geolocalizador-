@@ -254,8 +254,9 @@ export class Chat implements OnInit {
       next: () => {
         this.closeRatingModal();
       },
-      error: () => {
-        this.ratingError.set('Error al guardar la calificación. Intenta de nuevo.');
+      error: (err) => {
+        const detail = err?.error?.detail || err?.status || 'desconocido';
+        this.ratingError.set(`Error ${detail} al guardar. Intenta de nuevo.`);
       }
     });
   }
