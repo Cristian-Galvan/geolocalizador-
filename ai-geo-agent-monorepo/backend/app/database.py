@@ -3,23 +3,21 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-# 1. Se usa una ruta relativa para la base de datos para asegurar la portabilidad.
-# En Railway, puedes montar un volumen en esta ruta para persistir los datos.
-DATABASE_DIR = "data"
-DATABASE_PATH = os.path.join(DATABASE_DIR, "geo_agent.db")
+# Si Railway provee DATABASE_URL (Postgres), úsala; si no, SQLite local
+DATABASE_URL_ENV = os.getenv("DATABASE_URL", "")
 
-# 2. Se verifica que la carpeta exista para evitar errores al arrancar.
-if not os.path.exists(DATABASE_DIR):
-    os.makedirs(DATABASE_DIR, exist_ok=True)
+if DATABASE_URL_ENV:
+    # Railway inyecta postgres:// pero SQLAlchemy 2.x necesita postgresql://
+    SQLALCHEMY_DATABASE_URL = DATABASE_URL_ENV.replace("postgres://", "postgresql://", 1)
+else:
+    # SQLite: usa /data si existe (volumen Railway), si no, directorio del archivo
+    _base_dir = "/data" if os.path.isdir("/data") else os.path.dirname(os.path.abspath(__file__))
+    _db_dir = os.path.join(_base_dir, "data")
+    os.makedirs(_db_dir, exist_ok=True)
+    SQLALCHEMY_DATABASE_URL = f"sqlite:///{os.path.join(_db_dir, 'geo_agent.db')}"
 
-# 3. Construimos la URL de conexión para SQLite
-SQLALCHEMY_DATABASE_URL = f"sqlite:///{DATABASE_PATH}"
-
-# Creamos el motor de la base de datos
-# El argumento check_same_thread=False es necesario solo para SQLite
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-)
+_connect_args = {"check_same_thread": False} if SQLALCHEMY_DATABASE_URL.startswith("sqlite") else {}
+engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args=_connect_args)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

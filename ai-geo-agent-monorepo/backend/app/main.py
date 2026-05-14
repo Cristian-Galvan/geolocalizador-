@@ -11,11 +11,9 @@ from .services.ai_agent import ai_agent
 from .services.geo_processor import geo_processor
 from .services.distance_calculator import distance_calculator
 
-# Configurar logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Crear todas las tablas en el arranque (una sola vez)
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="AI Geo-Agent API")
@@ -27,6 +25,8 @@ app.add_middleware(
         "http://localhost:4200"
     ],
     allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -61,12 +61,16 @@ async def ask_agent(
         ai_response = await ai_agent.get_recommendation(context_prompt, request.latitude, request.longitude)
         
         # 3. Extraer places y response text
-        places = ai_response.get("places", []) if isinstance(ai_response, dict) else []
-        response_text = ai_response.get("error", "") if isinstance(ai_response, dict) else str(ai_response)
-        
-        # Si hay error, registrarlo
-        if response_text and "error" in response_text.lower():
-            logger.warning(f"Error de IA: {response_text}")
+        if isinstance(ai_response, dict):
+            places = ai_response.get("places", [])
+            error_msg = ai_response.get("error", "")
+        else:
+            places = []
+            error_msg = str(ai_response)
+
+        if error_msg:
+            logger.warning(f"Error de IA: {error_msg}")
+        response_text = error_msg if error_msg else f"Se encontraron {len(places)} lugares."
         
         # 4. Calcular distancia y tiempo para cada lugar
         places = distance_calculator.add_distance_and_duration(places, request.latitude, request.longitude)

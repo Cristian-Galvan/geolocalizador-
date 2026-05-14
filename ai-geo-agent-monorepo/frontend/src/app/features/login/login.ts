@@ -16,22 +16,19 @@ export class Login {
   isLoading = signal(false);
   errorMessage = signal('');
 
-  // Login form
   loginUsername = signal('');
   loginPassword = signal('');
 
-  // Register form
   registerUsername = signal('');
   registerEmail = signal('');
   registerPassword = signal('');
   registerConfirmPassword = signal('');
   registerFullName = signal('');
 
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {
-    // Si el usuario ya está autenticado, redirigir a chat
+  private emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  private usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
+
+  constructor(private authService: AuthService, private router: Router) {
     if (this.authService.isAuthenticated()) {
       this.router.navigate(['/chat']);
     }
@@ -43,7 +40,10 @@ export class Login {
   }
 
   login() {
-    if (!this.loginUsername() || !this.loginPassword()) {
+    const username = this.loginUsername().trim();
+    const password = this.loginPassword();
+
+    if (!username || !password) {
       this.errorMessage.set('Por favor completa todos los campos');
       return;
     }
@@ -51,50 +51,71 @@ export class Login {
     this.isLoading.set(true);
     this.errorMessage.set('');
 
-    this.authService.login(this.loginUsername(), this.loginPassword()).subscribe({
-      next: (response) => {
+    this.authService.login(username, password).subscribe({
+      next: () => {
         this.isLoading.set(false);
         this.router.navigate(['/chat']);
       },
       error: (error) => {
         this.isLoading.set(false);
-        this.errorMessage.set(error.error?.detail || 'Error en el login');
+        this.errorMessage.set(error.error?.detail || 'Usuario o contraseña incorrectos');
       }
     });
   }
 
   register() {
-    if (!this.registerUsername() || !this.registerEmail() || !this.registerPassword() || !this.registerConfirmPassword()) {
-      this.errorMessage.set('Por favor completa todos los campos');
+    const username = this.registerUsername().trim();
+    const email = this.registerEmail().trim();
+    const password = this.registerPassword();
+    const confirm = this.registerConfirmPassword();
+    const fullName = this.registerFullName().trim();
+
+    if (!username || !email || !password || !confirm) {
+      this.errorMessage.set('Por favor completa todos los campos obligatorios');
       return;
     }
 
-    if (this.registerPassword() !== this.registerConfirmPassword()) {
+    if (!this.usernameRegex.test(username)) {
+      this.errorMessage.set('El usuario debe tener 3-20 caracteres (letras, números o _), sin espacios');
+      return;
+    }
+
+    if (!this.emailRegex.test(email)) {
+      this.errorMessage.set('El email no tiene un formato válido');
+      return;
+    }
+
+    if (password.length < 6) {
+      this.errorMessage.set('La contraseña debe tener al menos 6 caracteres');
+      return;
+    }
+
+    if (password.length > 100) {
+      this.errorMessage.set('La contraseña no puede exceder 100 caracteres');
+      return;
+    }
+
+    if (password !== confirm) {
       this.errorMessage.set('Las contraseñas no coinciden');
       return;
     }
 
-    if (this.registerPassword().length < 6) {
-      this.errorMessage.set('La contraseña debe tener al menos 6 caracteres');
+    if (fullName.length > 60) {
+      this.errorMessage.set('El nombre no puede exceder 60 caracteres');
       return;
     }
 
     this.isLoading.set(true);
     this.errorMessage.set('');
 
-    this.authService.register(
-      this.registerUsername(),
-      this.registerEmail(),
-      this.registerPassword(),
-      this.registerFullName()
-    ).subscribe({
-      next: (response) => {
+    this.authService.register(username, email, password, fullName || undefined).subscribe({
+      next: () => {
         this.isLoading.set(false);
         this.router.navigate(['/chat']);
       },
       error: (error) => {
         this.isLoading.set(false);
-        this.errorMessage.set(error.error?.detail || 'Error en el registro');
+        this.errorMessage.set(error.error?.detail || 'Error en el registro. Intenta con otro usuario o email.');
       }
     });
   }

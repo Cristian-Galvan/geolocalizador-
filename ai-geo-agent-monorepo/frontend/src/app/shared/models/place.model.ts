@@ -1,14 +1,14 @@
 export interface Place {
   name: string;
-  description: string;
-  url: string;
+  description?: string;
+  url?: string;
   category?: string;
-  address?: string;        // Dirección exacta
-  phone?: string;          // Teléfono
+  address?: string;
+  phone?: string;
   latitude?: number;
   longitude?: number;
-  distance?: number;       // Distancia en km
-  duration?: number;       // Tiempo en minutos
+  distance?: number;
+  duration?: number;
 }
 
 export interface QueryResponse {

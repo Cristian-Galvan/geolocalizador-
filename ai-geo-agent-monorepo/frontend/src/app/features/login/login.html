@@ -1,134 +1,160 @@
-<div class="login-container">
+<main class="login-container" role="main">
   <div class="login-wrapper">
-    <!-- Card -->
-    <div class="login-card">
-      <!-- Logo and Title -->
-      <div class="login-header">
-        <div class="login-logo">🌍</div>
+    <section class="login-card" aria-label="Formulario de acceso">
+
+      <header class="login-header">
+        <!-- SVG Logo -->
+        <svg class="login-logo-svg" viewBox="0 0 56 62" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="28" cy="22" r="20" fill="none" stroke="#3b82f6" stroke-width="2.5"/>
+          <ellipse cx="28" cy="22" rx="10" ry="20" fill="none" stroke="#60a5fa" stroke-width="1.5"/>
+          <line x1="8" y1="22" x2="48" y2="22" stroke="#3b82f6" stroke-width="1.5"/>
+          <line x1="10" y1="13" x2="46" y2="13" stroke="#60a5fa" stroke-width="1" opacity="0.5"/>
+          <line x1="10" y1="31" x2="46" y2="31" stroke="#60a5fa" stroke-width="1" opacity="0.5"/>
+          <circle cx="28" cy="22" r="4" fill="#3b82f6"/>
+          <line x1="28" y1="26" x2="28" y2="38" stroke="#3b82f6" stroke-width="3" stroke-linecap="round"/>
+          <path d="M19 38 Q28 45 37 38" stroke="#60a5fa" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </svg>
         <h1 class="login-title">Geolizer</h1>
         <p class="login-subtitle">Explora lugares increíbles con IA</p>
-      </div>
+      </header>
 
-      <!-- Error Message -->
-      <div *ngIf="errorMessage()" class="login-error">
-        {{ errorMessage() }}
-      </div>
-      
-      <!-- Login Form -->
-      <div *ngIf="isLogin()" class="login-form">
-        <div class="form-group">
-          <label class="form-label">Usuario</label>
-          <input
-            [(ngModel)]="loginUsername"
-            type="text"
-            placeholder="Tu usuario"
-            class="form-input"
-          />
-        </div>
+      @if (errorMessage()) {
+        <p class="login-error" role="alert">{{ errorMessage() }}</p>
+      }
 
-        <div class="form-group">
-          <label class="form-label">Contraseña</label>
-          <input
-            [(ngModel)]="loginPassword"
-            type="password"
-            placeholder="Tu contraseña"
-            class="form-input"
-          />
-        </div>
+      @if (isLogin()) {
+        <form class="login-form" (ngSubmit)="login()" #loginForm="ngForm" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="login-user">Usuario</label>
+            <input
+              id="login-user"
+              [(ngModel)]="loginUsername"
+              name="loginUsername"
+              type="text"
+              placeholder="Tu usuario"
+              class="form-input"
+              autocomplete="username"
+              required
+            />
+          </div>
 
-        <button
-          (click)="login()"
-          [disabled]="isLoading()"
-          class="login-button"
-        >
-          <span *ngIf="!isLoading()">Iniciar Sesión</span>
-          <span *ngIf="isLoading()" class="spinner"></span>
-          <span *ngIf="isLoading()">Cargando...</span>
-        </button>
-      </div>
+          <div class="form-group">
+            <label class="form-label" for="login-pass">Contraseña</label>
+            <input
+              id="login-pass"
+              [(ngModel)]="loginPassword"
+              name="loginPassword"
+              type="password"
+              placeholder="Tu contraseña"
+              class="form-input"
+              autocomplete="current-password"
+              required
+            />
+          </div>
 
-      <!-- Register Form -->
-      <div *ngIf="!isLogin()" class="login-form">
-        <div class="form-group">
-          <label class="form-label">Usuario</label>
-          <input
-            [(ngModel)]="registerUsername"
-            type="text"
-            placeholder="Elige un usuario"
-            class="form-input"
-          />
-        </div>
+          <button type="submit" (click)="login()" [disabled]="isLoading()" class="login-button">
+            @if (!isLoading()) { <span>Iniciar Sesión</span> }
+            @if (isLoading()) { <span class="spinner"></span><span>Cargando...</span> }
+          </button>
+        </form>
+      }
 
-        <div class="form-group">
-          <label class="form-label">Email</label>
-          <input
-            [(ngModel)]="registerEmail"
-            type="email"
-            placeholder="Tu email"
-            class="form-input"
-          />
-        </div>
+      @if (!isLogin()) {
+        <form class="login-form" (ngSubmit)="register()" #registerForm="ngForm" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="reg-user">Usuario <span class="field-hint">(3-20 chars, sin espacios)</span></label>
+            <input
+              id="reg-user"
+              [(ngModel)]="registerUsername"
+              name="registerUsername"
+              type="text"
+              placeholder="Elige un usuario"
+              class="form-input"
+              autocomplete="username"
+              maxlength="20"
+              required
+            />
+          </div>
 
-        <div class="form-group">
-          <label class="form-label">Nombre Completo (Opcional)</label>
-          <input
-            [(ngModel)]="registerFullName"
-            type="text"
-            placeholder="Tu nombre"
-            class="form-input"
-          />
-        </div>
+          <div class="form-group">
+            <label class="form-label" for="reg-email">Email</label>
+            <input
+              id="reg-email"
+              [(ngModel)]="registerEmail"
+              name="registerEmail"
+              type="email"
+              placeholder="Tu email"
+              class="form-input"
+              autocomplete="email"
+              required
+            />
+          </div>
 
-        <div class="form-group">
-          <label class="form-label">Contraseña</label>
-          <input
-            [(ngModel)]="registerPassword"
-            type="password"
-            placeholder="Mínimo 6 caracteres"
-            class="form-input"
-          />
-        </div>
+          <div class="form-group">
+            <label class="form-label" for="reg-name">Nombre Completo <span class="field-hint">(opcional)</span></label>
+            <input
+              id="reg-name"
+              [(ngModel)]="registerFullName"
+              name="registerFullName"
+              type="text"
+              placeholder="Tu nombre"
+              class="form-input"
+              autocomplete="name"
+              maxlength="60"
+            />
+          </div>
 
-        <div class="form-group">
-          <label class="form-label">Confirmar Contraseña</label>
-          <input
-            [(ngModel)]="registerConfirmPassword"
-            type="password"
-            placeholder="Repite la contraseña"
-            class="form-input"
-          />
-        </div>
+          <div class="form-group">
+            <label class="form-label" for="reg-pass">Contraseña <span class="field-hint">(mín. 6 caracteres)</span></label>
+            <input
+              id="reg-pass"
+              [(ngModel)]="registerPassword"
+              name="registerPassword"
+              type="password"
+              placeholder="Mínimo 6 caracteres"
+              class="form-input"
+              autocomplete="new-password"
+              minlength="6"
+              maxlength="100"
+              required
+            />
+          </div>
 
-        <button
-          (click)="register()"
-          [disabled]="isLoading()"
-          class="login-button register-button"
-        >
-          <span *ngIf="!isLoading()">Crear Cuenta</span>
-          <span *ngIf="isLoading()" class="spinner"></span>
-          <span *ngIf="isLoading()">Cargando...</span>
-        </button>
-      </div>
+          <div class="form-group">
+            <label class="form-label" for="reg-confirm">Confirmar Contraseña</label>
+            <input
+              id="reg-confirm"
+              [(ngModel)]="registerConfirmPassword"
+              name="registerConfirmPassword"
+              type="password"
+              placeholder="Repite la contraseña"
+              class="form-input"
+              autocomplete="new-password"
+              required
+            />
+          </div>
 
-      <!-- Toggle Form -->
+          <button type="submit" (click)="register()" [disabled]="isLoading()" class="login-button register-button">
+            @if (!isLoading()) { <span>Crear Cuenta</span> }
+            @if (isLoading()) { <span class="spinner"></span><span>Cargando...</span> }
+          </button>
+        </form>
+      }
+
       <div class="toggle-form">
         <p class="toggle-text">
-          <span *ngIf="isLogin()">¿No tienes cuenta? </span>
-          <span *ngIf="!isLogin()">¿Ya tienes cuenta? </span>
-          <button
-            (click)="toggleForm()"
-            class="toggle-button"
-          >
-            <span *ngIf="isLogin()">Registrate</span>
-            <span *ngIf="!isLogin()">Inicia sesión</span>
+          @if (isLogin()) { <span>¿No tienes cuenta? </span> }
+          @if (!isLogin()) { <span>¿Ya tienes cuenta? </span> }
+          <button (click)="toggleForm()" class="toggle-button">
+            @if (isLogin()) { <span>Regístrate</span> }
+            @if (!isLogin()) { <span>Inicia sesión</span> }
           </button>
         </p>
       </div>
-    </div>
+    </section>
 
-    <!-- Footer -->
-    <p class="login-footer">
-      © 2026 Geolizer. Todos los derechos reservados.
-    </p>
+    <footer class="login-footer">
+      <p>© 2026 Geolizer · Todos los derechos reservados</p>
+    </footer>
   </div>
-</div>
+</main>

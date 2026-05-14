@@ -267,6 +267,18 @@
   transform: translateY(-2px);
 }
 
+/* Canvas Chart */
+.chart-section {
+  margin-bottom: 2.5rem;
+}
+
+.ratings-chart {
+  width: 100%;
+  height: 220px;
+  border-radius: 0.875rem;
+  display: block;
+}
+
 /* Back Button */
 .back-button {
   display: inline-flex;

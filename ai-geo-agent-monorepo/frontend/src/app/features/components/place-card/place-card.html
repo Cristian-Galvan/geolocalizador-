@@ -7,31 +7,43 @@
     </div>
   </div>
 
-  <p class="place-card-description">
-    {{ place.description }}
-  </p>
+  @if (place.description) {
+    <p class="place-card-description">{{ place.description }}</p>
+  }
 
-  <div class="place-card-details" *ngIf="place.address || place.phone">
-    <div class="detail-item" *ngIf="place.address">
-      <span class="detail-icon">📍</span>
-      <span class="detail-text">{{ place.address }}</span>
+  @if (place.address || place.phone) {
+    <div class="place-card-details">
+      @if (place.address) {
+        <div class="detail-item">
+          <span class="detail-icon">📍</span>
+          <span class="detail-text">{{ place.address }}</span>
+        </div>
+      }
+      @if (place.phone) {
+        <div class="detail-item">
+          <span class="detail-icon">☎️</span>
+          <span class="detail-text">{{ place.phone }}</span>
+        </div>
+      }
     </div>
-    <div class="detail-item" *ngIf="place.phone">
-      <span class="detail-icon">☎️</span>
-      <span class="detail-text">{{ place.phone }}</span>
-    </div>
-  </div>
+  }
 
-  <div class="place-card-info" *ngIf="place.distance !== undefined || place.duration !== undefined">
-    <div class="info-item" *ngIf="place.distance !== undefined">
-      <span class="info-icon">📍</span>
-      <span class="info-text">{{ place.distance | number:'1.1-1' }} km</span>
+  @if (place.distance !== undefined || place.duration !== undefined) {
+    <div class="place-card-info">
+      @if (place.distance !== undefined) {
+        <div class="info-item">
+          <span class="info-icon">📍</span>
+          <span class="info-text">{{ place.distance | number:'1.1-1' }} km</span>
+        </div>
+      }
+      @if (place.duration !== undefined) {
+        <div class="info-item">
+          <span class="info-icon">⏱️</span>
+          <span class="info-text">~{{ place.duration }} min</span>
+        </div>
+      }
     </div>
-    <div class="info-item" *ngIf="place.duration !== undefined">
-      <span class="info-icon">⏱️</span>
-      <span class="info-text">~{{ place.duration }} min</span>
-    </div>
-  </div>
+  }
 
   <div class="place-card-actions">
     <a [href]="getMapUrl()" target="_blank" class="place-card-link" title="Abrir en Google Maps">
