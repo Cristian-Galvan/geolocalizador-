@@ -9,10 +9,10 @@ load_dotenv()
 class AIAgent:
     def __init__(self):
         self.api_key = (os.getenv("GEMINI_API_KEY") or "").strip()
-        self.model_name = "gemini-2.0-flash"
+        self.model_name = "gemini-1.5-flash"
         self.url = f"https://generativelanguage.googleapis.com/v1beta/models/{self.model_name}:generateContent?key={self.api_key}"
         self.timeout = 45
-        self.max_retries = 3
+        self.max_retries = 1
         self.retry_delay = 2
 
     async def get_recommendation(self, prompt: str, lat: float, lng: float):
