@@ -4,15 +4,15 @@ from typing import Optional, List
 
 class PlaceModel(BaseModel):
     name: str
-    description: str
-    category: str
-    url: str
-    address: Optional[str] = None  # Dirección exacta
-    phone: Optional[str] = None    # Teléfono
+    description: Optional[str] = ""
+    category: Optional[str] = None
+    url: Optional[str] = None
+    address: Optional[str] = None
+    phone: Optional[str] = None
     latitude: Optional[float] = None
     longitude: Optional[float] = None
-    distance: Optional[float] = None  # Distancia en km
-    duration: Optional[int] = None    # Tiempo en minutos
+    distance: Optional[float] = None
+    duration: Optional[int] = None
 
 class QueryRequest(BaseModel):
     prompt: str = Field(..., min_length=3, max_length=500)

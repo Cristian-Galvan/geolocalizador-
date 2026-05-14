@@ -9,11 +9,11 @@ load_dotenv()
 class AIAgent:
     def __init__(self):
         self.api_key = (os.getenv("GEMINI_API_KEY") or "").strip()
-        self.model_name = "gemini-3-flash-preview"
+        self.model_name = "gemini-2.0-flash"
         self.url = f"https://generativelanguage.googleapis.com/v1beta/models/{self.model_name}:generateContent?key={self.api_key}"
-        self.timeout = 45  # Aumentado de 15 a 45 segundos
+        self.timeout = 45
         self.max_retries = 3
-        self.retry_delay = 2  # segundos
+        self.retry_delay = 2
 
     async def get_recommendation(self, prompt: str, lat: float, lng: float):
         payload = {
@@ -86,19 +86,27 @@ IMPORTANTE:
         return {"places": [], "error": "No se pudo conectar después de varios intentos."}
 
     def _parse_response(self, response):
-        """Parsea la respuesta de la API"""
         try:
             data = response.json()
-            if 'candidates' in data and data['candidates']:
-                text_response = data['candidates'][0]['content']['parts'][0]['text']
-                
-                # Limpiar y parsear JSON
-                cleaned = text_response.strip()
-                json_data = json.loads(cleaned)
-                return json_data
-            else:
+            if 'candidates' not in data or not data['candidates']:
                 return {"places": [], "error": "Respuesta vacía del servidor"}
-                
+
+            text_response = data['candidates'][0]['content']['parts'][0]['text']
+            cleaned = text_response.strip()
+
+            # Gemini a veces envuelve en ```json ... ```
+            if cleaned.startswith("```"):
+                cleaned = cleaned.split("```", 2)[-1] if cleaned.count("```") >= 2 else cleaned
+                if cleaned.startswith("json"):
+                    cleaned = cleaned[4:]
+                end = cleaned.rfind("```")
+                if end != -1:
+                    cleaned = cleaned[:end]
+                cleaned = cleaned.strip()
+
+            json_data = json.loads(cleaned)
+            return json_data
+
         except json.JSONDecodeError:
             return {"places": [], "error": "Respuesta no fue JSON válido"}
         except (KeyError, IndexError):
