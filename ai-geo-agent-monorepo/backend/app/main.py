@@ -23,8 +23,9 @@ app = FastAPI(title="AI Geo-Agent API")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://illustrious-communication-production-d0aa.up.railway.app",
-        "http://localhost:4200"                               
+         "https://illustrious-communication-production-d0aa.up.railway.app",
+         "https://geolocalizador-production.up.railway.app",
+         "http://localhost:4200"         
     ],
     allow_credentials=True,
     allow_methods=["*"],
