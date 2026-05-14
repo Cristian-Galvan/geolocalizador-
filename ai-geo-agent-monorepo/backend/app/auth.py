@@ -4,7 +4,6 @@ import os
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel
-import os
 
 SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-key-change-in-production-please")
 ALGORITHM = "HS256"
