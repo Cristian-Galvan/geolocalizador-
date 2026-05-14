@@ -37,6 +37,21 @@
   animation: pulse 3s ease-in-out infinite;
 }
 
+.login-logo-svg {
+  width: 64px;
+  height: 72px;
+  margin: 0 auto 1.25rem;
+  display: block;
+  filter: drop-shadow(0 0 12px rgba(59, 130, 246, 0.5));
+  animation: pulse 3s ease-in-out infinite;
+}
+
+.field-hint {
+  font-size: 0.7rem;
+  color: #64748b;
+  font-weight: 400;
+}
+
 .login-title {
   font-size: 1.875rem;
   font-weight: 700;

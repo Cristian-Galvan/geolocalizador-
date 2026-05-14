@@ -1,76 +1,90 @@
-<div class="ratings-container">
+<main class="ratings-container">
   <div class="ratings-wrapper">
-    <!-- Header -->
-    <div class="ratings-header">
+
+    <header class="ratings-header">
       <h1 class="ratings-title">⭐ Mis Calificaciones</h1>
       <p class="ratings-subtitle">Lugares que has visitado y evaluado</p>
-    </div>
+    </header>
 
-    <!-- Loading State -->
-    <div *ngIf="isLoading()" class="ratings-loading">
-      <div class="spinner"></div>
-    </div>
-
-    <!-- Empty State -->
-    <div *ngIf="!isLoading() && ratings().length === 0" class="ratings-empty">
-      <p class="empty-text">Aún no has calificado ningún lugar</p>
-      <a routerLink="/chat" class="empty-button">
-        🔍 Encontrar y calificar lugares
-      </a>
-    </div>
-
-    <!-- Stats Card -->
-    <div *ngIf="!isLoading() && ratings().length > 0" class="stats-grid">
-      <div class="stats-card stats-card-places">
-        <p class="stats-label">Total de Lugares</p>
-        <p class="stats-value">{{ ratings().length }}</p>
+    @if (isLoading()) {
+      <div class="ratings-loading" role="status" aria-label="Cargando calificaciones">
+        <div class="spinner"></div>
       </div>
-      <div class="stats-card stats-card-average">
-        <p class="stats-label">Calificación Promedio</p>
-        <p class="stats-value">{{ averageRating() | number:'1.1-1' }}</p>
-      </div>
-      <div class="stats-card stats-card-score">
-        <p class="stats-label">Puntuación</p>
-        <p class="stats-value">{{ getRatingStars(averageRating()) }}</p>
-      </div>
-    </div>
+    }
 
-    <!-- Ratings Grid -->
-    <div *ngIf="!isLoading() && ratings().length > 0" class="ratings-grid">
-      <div *ngFor="let rating of ratings()" class="rating-card">
-        
-        <div class="rating-header">
-          <div class="rating-place">
-            <p class="rating-name">{{ rating.name }}</p>
-            <p class="rating-address">📍 {{ rating.address }}</p>
-          </div>
-          <span class="rating-stars">{{ getRatingStars(rating.rating) }}</span>
+    @if (!isLoading() && ratings().length === 0) {
+      <section class="ratings-empty">
+        <p class="empty-text">Aún no has calificado ningún lugar</p>
+        <a routerLink="/chat" class="empty-button">🔍 Encontrar y calificar lugares</a>
+      </section>
+    }
+
+    @if (!isLoading() && ratings().length > 0) {
+
+      <!-- Stats -->
+      <section class="stats-grid" aria-label="Estadísticas de calificaciones">
+        <div class="stats-card stats-card-places">
+          <p class="stats-label">Total de Lugares</p>
+          <p class="stats-value">{{ ratings().length }}</p>
         </div>
-
-        <div>
-          <p class="rating-score">
-            <span class="comment-label">Puntuación:</span>
-            <span class="score-badge">{{ rating.rating }}/5</span>
-          </p>
-          <p class="rating-comment">
-            <span class="comment-label">Comentario:</span> {{ rating.comment || 'Sin comentarios' }}
-          </p>
-          <p class="rating-date">
-            Visitado: {{ rating.timestamp | date:'short' }}
-          </p>
+        <div class="stats-card stats-card-average">
+          <p class="stats-label">Calificación Promedio</p>
+          <p class="stats-value">{{ averageRating() | number:'1.1-1' }}</p>
         </div>
+        <div class="stats-card stats-card-score">
+          <p class="stats-label">Puntuación</p>
+          <p class="stats-value">{{ getRatingStars(averageRating()) }}</p>
+        </div>
+      </section>
 
-        <button (click)="deleteRating(rating.id)" class="delete-button">
-          🗑️ Eliminar
-        </button>
-      </div>
-    </div>
+      <!-- Canvas Chart (Canvas API) -->
+      <section class="chart-section" aria-label="Gráfico de distribución">
+        <canvas #ratingsChart class="ratings-chart" role="img" aria-label="Gráfico de barras con distribución de calificaciones"></canvas>
+      </section>
 
-    <!-- Back Button -->
-    <div>
-      <a routerLink="/chat" class="back-button">
-        ← Volver al chat
-      </a>
-    </div>
+      <!-- Ratings Grid -->
+      <section aria-label="Lista de calificaciones">
+        <div class="ratings-grid">
+          @for (rating of ratings(); track rating.id) {
+            <article class="rating-card">
+              <header class="rating-header">
+                <div class="rating-place">
+                  <p class="rating-name">{{ rating.name }}</p>
+                  <p class="rating-address">📍 {{ rating.address }}</p>
+                </div>
+                <span class="rating-stars" aria-label="{{ rating.rating }} estrellas">
+                  {{ getRatingStars(rating.rating) }}
+                </span>
+              </header>
+
+              <div class="rating-body">
+                <p class="rating-score">
+                  <span class="comment-label">Puntuación:</span>
+                  <span class="score-badge">{{ rating.rating }}/5</span>
+                </p>
+                @if (rating.comment) {
+                  <p class="rating-comment">
+                    <span class="comment-label">Comentario:</span> {{ rating.comment }}
+                  </p>
+                }
+                <time class="rating-date" [attr.datetime]="rating.timestamp">
+                  Visitado: {{ rating.timestamp | date:'short' }}
+                </time>
+              </div>
+
+              <button (click)="deleteRating(rating.id)" class="delete-button" aria-label="Eliminar calificación de {{ rating.name }}">
+                🗑️ Eliminar
+              </button>
+            </article>
+          }
+        </div>
+      </section>
+
+    }
+
+    <footer>
+      <a routerLink="/chat" class="back-button">← Volver al chat</a>
+    </footer>
+
   </div>
-</div>
+</main>

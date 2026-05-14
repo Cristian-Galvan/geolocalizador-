@@ -7,78 +7,89 @@
 
   <!-- Chat History -->
   <div class="chat-content">
-    <!-- Messages -->
-    <div *ngFor="let message of chatHistory()" class="message-group">
-      <!-- User Message -->
-      <div *ngIf="message.type === 'user'" class="user-message-container">
-        <div class="user-message">
-          <p class="user-text">{{ message.text }}</p>
-          <p class="user-address">📍 {{ message.address }}</p>
-          <span class="message-time" *ngIf="message.timestamp">{{ message.timestamp }}</span>
-        </div>
+
+    @for (message of chatHistory(); track $index) {
+      <div class="message-group">
+        @if (message.type === 'user') {
+          <div class="user-message-container">
+            <div class="user-message">
+              <p class="user-text">{{ message.text }}</p>
+              <p class="user-address">📍 {{ message.address }}</p>
+              @if (message.timestamp) {
+                <span class="message-time">{{ message.timestamp }}</span>
+              }
+            </div>
+          </div>
+        }
+
+        @if (message.type === 'bot') {
+          <div class="bot-message">
+            <p class="bot-label">🤖 Recomendaciones basadas en tu ubicación:</p>
+            <div class="places-grid">
+              @for (place of message.places; track place.name) {
+                <app-place-card [place]="place" (onRate)="openRatingModal($event)" />
+              }
+            </div>
+            <div class="search-location-info">
+              <p class="search-text">
+                <span class="search-label">Búsqueda realizada en:</span> {{ message.address }}
+              </p>
+            </div>
+          </div>
+        }
       </div>
-
-      <!-- Bot Message with Places -->
-      <div *ngIf="message.type === 'bot'" class="bot-message">
-        <p class="bot-label">🤖 Recomendaciones basadas en tu ubicación:</p>
-
-        <!-- Places Grid -->
-        <div class="places-grid">
-          <app-place-card 
-            *ngFor="let place of message.places"
-            [place]="place"
-            (onRate)="openRatingModal($event)">
-          </app-place-card>
-        </div>
-
-        <div class="search-location-info">
-          <p class="search-text">
-            <span class="search-label">Búsqueda realizada en:</span> {{ message.address }}
-          </p>
-        </div>
-      </div>
-    </div>
+    }
 
     <!-- Empty State -->
-    <div *ngIf="chatHistory().length === 0 && !isLoading()" class="empty-state">
-      <div class="empty-icon">🗺️</div>
-      <p class="empty-title">Comienza a explorar haciendo una pregunta</p>
-      <div class="examples-label">Sugerencias:</div>
-      <div class="quick-suggestions">
-        <button 
-          *ngFor="let suggestion of suggestions"
-          (click)="sendQuery(suggestion)"
-          class="suggestion-btn">
-          {{ suggestion }}
-        </button>
+    @if (chatHistory().length === 0 && !isLoading()) {
+      <div class="empty-state">
+        <div class="empty-icon">🗺️</div>
+        <p class="empty-title">Comienza a explorar haciendo una pregunta</p>
+        <div class="examples-label">Sugerencias:</div>
+        <div class="quick-suggestions">
+          @for (suggestion of suggestions; track suggestion) {
+            <button (click)="sendQuery(suggestion)" class="suggestion-btn">
+              {{ suggestion }}
+            </button>
+          }
+        </div>
       </div>
-    </div>
+    }
 
     <!-- Loading State -->
-    <div *ngIf="isLoading()" class="loading-state">
-      <div class="loading-icon">🤖</div>
-      <p class="loading-title">Buscando los mejores lugares...</p>
-      <p class="loading-subtitle">Esto puede tomar un momento (máx. 45 segundos)</p>
-      <div class="loading-dots">
-        <span class="dot"></span>
-        <span class="dot"></span>
-        <span class="dot"></span>
+    @if (isLoading()) {
+      <div class="loading-state">
+        <div class="loading-icon">🤖</div>
+        <p class="loading-title">Buscando los mejores lugares...</p>
+        <p class="loading-subtitle">Esto puede tomar un momento (máx. 45 segundos)</p>
+        <div class="loading-dots">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
       </div>
-    </div>
+    }
 
     <!-- Tools -->
-    <div *ngIf="chatHistory().length > 0 && !isLoading()" class="chat-tools">
-      <button (click)="downloadHistoryAsJSON()" class="tool-btn download-btn" title="Descargar historial">
-        💾 Descargar
-      </button>
-      <button (click)="clearHistory()" class="tool-btn clear-btn" title="Limpiar historial">
-        🗑️ Limpiar
-      </button>
-    </div>
+    @if (chatHistory().length > 0 && !isLoading()) {
+      <div class="chat-tools">
+        <button (click)="downloadHistoryAsJSON()" class="tool-btn download-btn">💾 Descargar</button>
+        <button (click)="clearHistory()" class="tool-btn clear-btn">🗑️ Limpiar</button>
+      </div>
+    }
   </div>
 
-  <!-- Input Bar (Fixed at bottom) -->
+  <!-- Input Bar -->
   <div class="input-bar">
+    <!-- GPS error -->
+    @if (gpsError()) {
+      <p class="input-error">📍 {{ gpsError() }}</p>
+    }
+    <!-- Send error -->
+    @if (sendError()) {
+      <p class="input-error">{{ sendError() }}</p>
+    }
+
     <div class="input-container">
       <input
         [ngModel]="userInput()"
@@ -86,68 +97,71 @@
         (keyup.enter)="sendQuery()"
         placeholder="¿A dónde vamos hoy?"
         class="chat-input"
+        [maxlength]="maxQueryLength"
       />
 
       <!-- Suggestions Dropdown -->
-      <div *ngIf="filteredSuggestions().length > 0" class="suggestions-dropdown">
-        <button 
-          *ngFor="let suggestion of filteredSuggestions()"
-          (click)="sendQuery(suggestion)"
-          class="suggestion-item">
-          {{ suggestion }}
-        </button>
-      </div>
+      @if (filteredSuggestions().length > 0) {
+        <div class="suggestions-dropdown">
+          @for (suggestion of filteredSuggestions(); track suggestion) {
+            <button (click)="sendQuery(suggestion)" class="suggestion-item">
+              {{ suggestion }}
+            </button>
+          }
+        </div>
+      }
 
-      <button
-        (click)="sendQuery()"
-        [disabled]="isLoading()"
-        class="send-button"
-      >
-        <span *ngIf="!isLoading()">🚀</span>
-        <div *ngIf="isLoading()" class="spinner"></div>
+      <button (click)="sendQuery()" [disabled]="isLoading()" class="send-button">
+        @if (!isLoading()) { <span>🚀</span> }
+        @if (isLoading()) { <div class="spinner"></div> }
       </button>
     </div>
+
+    <!-- Char counter -->
+    @if (userInput().length > 400) {
+      <p class="char-counter" [class.char-limit]="userInput().length >= maxQueryLength">
+        {{ userInput().length }}/{{ maxQueryLength }}
+      </p>
+    }
   </div>
 
   <!-- Rating Modal -->
-  <div *ngIf="showRatingModal()" class="modal-overlay">
-    <div class="modal-content">
-      <h2 class="modal-title">Califica este lugar</h2>
-      <p class="modal-subtitle">{{ selectedPlaceForRating()?.name }}</p>
+  @if (showRatingModal()) {
+    <div class="modal-overlay">
+      <div class="modal-content">
+        <h2 class="modal-title">Califica este lugar</h2>
+        <p class="modal-subtitle">{{ selectedPlaceForRating()?.name }}</p>
 
-      <!-- Star Rating -->
-      <div class="stars-container">
-        <button
-          *ngFor="let i of [1, 2, 3, 4, 5]"
-          (click)="setRating(i)"
-          class="star-button"
-          [class.inactive]="ratingValue() < i"
-        >
-          ⭐
-        </button>
-      </div>
+        <div class="stars-container">
+          @for (i of [1, 2, 3, 4, 5]; track i) {
+            <button (click)="setRating(i)" class="star-button" [class.inactive]="ratingValue() < i">⭐</button>
+          }
+        </div>
 
-      <!-- Comment -->
-      <div class="comment-section">
-        <label class="comment-label">Comentario (opcional)</label>
-        <textarea
-          [ngModel]="ratingComment()"
-          (ngModelChange)="ratingComment.set($event)"
-          placeholder="Cuéntanos tu experiencia..."
-          class="comment-textarea"
-          rows="3"
-        ></textarea>
-      </div>
+        <div class="comment-section">
+          <label class="comment-label">
+            Comentario (opcional)
+            <span class="char-counter">{{ ratingComment().length }}/{{ maxCommentLength }}</span>
+          </label>
+          <textarea
+            [ngModel]="ratingComment()"
+            (ngModelChange)="onCommentChange($event)"
+            placeholder="Cuéntanos tu experiencia..."
+            class="comment-textarea"
+            rows="3"
+            [maxlength]="maxCommentLength"
+          ></textarea>
+        </div>
 
-      <!-- Buttons -->
-      <div class="buttons-container">
-        <button (click)="submitRating()" class="btn-submit">
-          Enviar Calificación
-        </button>
-        <button (click)="closeRatingModal()" class="btn-cancel">
-          Cancelar
-        </button>
+        @if (ratingError()) {
+          <p class="input-error">{{ ratingError() }}</p>
+        }
+
+        <div class="buttons-container">
+          <button (click)="submitRating()" class="btn-submit">Enviar Calificación</button>
+          <button (click)="closeRatingModal()" class="btn-cancel">Cancelar</button>
+        </div>
       </div>
     </div>
-  </div>
+  }
 </div>
