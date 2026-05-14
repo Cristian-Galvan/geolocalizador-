@@ -9,7 +9,7 @@ load_dotenv()
 class AIAgent:
     def __init__(self):
         self.api_key = (os.getenv("GEMINI_API_KEY") or "").strip()
-        self.model_name = "gemini-1.5-flash"
+        self.model_name = "gemini-1.5-flash-latest"
         self.url = f"https://generativelanguage.googleapis.com/v1beta/models/{self.model_name}:generateContent?key={self.api_key}"
         self.timeout = 45
         self.max_retries = 1
