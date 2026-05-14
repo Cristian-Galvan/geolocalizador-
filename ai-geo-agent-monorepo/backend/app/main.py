@@ -23,9 +23,8 @@ app = FastAPI(title="AI Geo-Agent API")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-         "https://illustrious-communication-production-d0aa.up.railway.app",
-         "https://geolocalizador-production.up.railway.app",
-         "http://localhost:4200"         
+        "https://illustrious-communication-production-d0aa.up.railway.app",
+        "http://localhost:4200"
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -130,7 +129,7 @@ async def delete_history(
     db.commit()
     return {"message": "Registro eliminado"}
 
-@app.post("/visited", response_model=schemas.VisitedPlaceResponse)
+@app.post("/ratings", response_model=schemas.VisitedPlaceResponse)
 async def rate_place(
     item: schemas.VisitedPlaceCreate,
     db: Session = Depends(get_db),
@@ -151,39 +150,6 @@ async def rate_place(
     db.commit()
     db.refresh(new_place)
     return new_place
-
-@app.get("/visited", response_model=List[schemas.VisitedPlaceResponse])
-async def get_visited_places(
-    db: Session = Depends(get_db),
-    current_user: auth_models.User = Depends(get_current_user)
-):
-    if not current_user:
-        raise HTTPException(status_code=401, detail="No autenticado")
-    
-    return db.query(models.VisitedPlace).filter(
-        models.VisitedPlace.user_id == current_user.id
-    ).order_by(models.VisitedPlace.timestamp.desc()).all()
-
-@app.delete("/visited/{place_id}")
-async def delete_visited_place(
-    place_id: int,
-    db: Session = Depends(get_db),
-    current_user: auth_models.User = Depends(get_current_user)
-):
-    if not current_user:
-        raise HTTPException(status_code=401, detail="No autenticado")
-    
-    place = db.query(models.VisitedPlace).filter(
-        (models.VisitedPlace.id == place_id) &
-        (models.VisitedPlace.user_id == current_user.id)
-    ).first()
-    
-    if not place:
-        raise HTTPException(status_code=404, detail="No encontrado")
-    
-    db.delete(place)
-    db.commit()
-    return {"message": "Lugar eliminado"}
 
 @app.get("/ratings", response_model=List[schemas.VisitedPlaceResponse])
 async def get_ratings(

@@ -5,6 +5,9 @@ import { AuthService } from './auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
+  // Se cambia la URL fija por una variable de entorno para facilitar el cambio
+  // entre desarrollo local y producción.
+  
   private baseUrl = 'https://geolocalizador-production-1c75.up.railway.app';
   private authService = inject(AuthService);
   private http = inject(HttpClient);
@@ -30,7 +33,7 @@ export class ApiService {
 
   // Guarda una calificación
   ratePlace(placeData: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/visited`, 
+    return this.http.post(`${this.baseUrl}/ratings`, 
       placeData,
       { headers: this.getHeaders() }
     );

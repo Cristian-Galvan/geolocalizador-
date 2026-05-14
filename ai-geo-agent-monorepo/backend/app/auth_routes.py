@@ -10,8 +10,7 @@ from .auth import (
     get_password_hash, 
     create_access_token,
     decode_token,
-    ACCESS_TOKEN_EXPIRE_MINUTES,
-    Token
+    ACCESS_TOKEN_EXPIRE_MINUTES
 )
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])

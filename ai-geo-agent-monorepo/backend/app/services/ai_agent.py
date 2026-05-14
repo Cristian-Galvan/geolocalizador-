@@ -9,29 +9,54 @@ load_dotenv()
 class AIAgent:
     def __init__(self):
         self.api_key = (os.getenv("GEMINI_API_KEY") or "").strip()
-        self.model_name = "gemini-3-flash-preview"
+        # El modelo "gemini-3-flash-preview" no existe. Se corrige al modelo flash más reciente.
+        self.model_name = "gemini-1.5-flash-latest"
         self.url = f"https://generativelanguage.googleapis.com/v1beta/models/{self.model_name}:generateContent?key={self.api_key}"
         self.timeout = 45  # Aumentado de 15 a 45 segundos
         self.max_retries = 3
         self.retry_delay = 2  # segundos
 
     async def get_recommendation(self, prompt: str, lat: float, lng: float):
+        # Se añade una verificación para la clave de API. Si no está configurada,
+        # se devuelve un error claro en lugar de un fallo genérico de la API.
+        if not self.api_key:
+            return {"places": [], "error": "Error de configuración: La clave de API de Gemini no está configurada en el servidor."}
+
+        json_format_example = """
+{
+    "places": [
+        {
+            "name": "Nombre del Lugar",
+            "description": "Descripción breve y útil sobre el lugar.",
+            "category": "Categoría (ej. Restaurante, Museo, Parque)",
+            "address": "Calle Falsa 123, Colonia, Ciudad",
+            "latitude": 19.4326,
+            "longitude": -99.1332,
+            "phone": "+52 55 1234 5678",
+            "url": "https://maps.google.com/?q=19.4326,-99.1332"
+        }
+    ]
+}
+"""
         payload = {
             "contents": [{
                 "role": "user",
                 "parts": [{
-                    "text": f"""Ubicación: {lat},{lng}. Pregunta: {prompt}
+                    "text": f"""Basado en mi ubicación actual ({lat}, {lng}), responde a mi pregunta: "{prompt}".
 
-Devuelve MÍNIMO 6 lugares reales cercanos EN ESTE JSON:
-{{"places":[{{"name":"Nombre","description":"Breve","category":"Tipo","address":"Calle Nombre Número, Ciudad","latitude":0.0,"longitude":0.0,"phone":"###","url":"https://maps.google.com/?q=0.0,0.0"}}]}}
+Devuelve una lista de MÍNIMO 6 lugares reales y cercanos que coincidan con mi petición.
+La respuesta DEBE ser únicamente un objeto JSON válido, sin texto adicional antes o después.
 
-IMPORTANTE:
-- SOLO JSON, SIN TEXTO EXTRA
-- Dirección EXACTA: "Calle Nombre Número Exterior, Ciudad"
-- Incluir número de exterior en la dirección
-- Coordenadas reales y verificadas
-- Mínimo 6 lugares
-- Ordena por distancia"""
+Usa este formato JSON exacto:
+{json_format_example}
+
+Reglas importantes:
+- La respuesta debe ser solo el JSON. No incluyas "```json" o "```".
+- Proporciona direcciones exactas y completas, incluyendo calle y número si es posible.
+- Las coordenadas (latitud y longitud) deben ser precisas para cada lugar.
+- La URL de Google Maps debe usar las coordenadas del lugar: `https://maps.google.com/?q=LATITUD,LONGITUD`.
+- Ordena los resultados por relevancia y proximidad a mi ubicación.
+"""
                 }]
             }]
         }

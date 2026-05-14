@@ -3,11 +3,12 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-# 1. Definimos la ruta absoluta que configuraste en el volumen de Railway
-DATABASE_DIR = "/backend/app/data"
+# 1. Se usa una ruta relativa para la base de datos para asegurar la portabilidad.
+# En Railway, puedes montar un volumen en esta ruta para persistir los datos.
+DATABASE_DIR = "data"
 DATABASE_PATH = os.path.join(DATABASE_DIR, "geo_agent.db")
 
-# 2. Verificamos que la carpeta exista (esto evita errores al arrancar)
+# 2. Se verifica que la carpeta exista para evitar errores al arrancar.
 if not os.path.exists(DATABASE_DIR):
     os.makedirs(DATABASE_DIR, exist_ok=True)
 
