@@ -3,7 +3,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from typing import List
 import logging
-import os
 
 from .database import SessionLocal, engine, Base
 from . import models, schemas, auth_models, auth_routes
@@ -19,17 +18,10 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="AI Geo-Agent API")
 
-_default_origins = (
-    "https://illustrious-communication-production-d0aa.up.railway.app,"
-    "http://localhost:4200"
-)
-_raw_origins = os.getenv("ALLOWED_ORIGINS", _default_origins)
-allowed_origins = [o.strip() for o in _raw_origins.split(",") if o.strip()]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=allowed_origins,
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
