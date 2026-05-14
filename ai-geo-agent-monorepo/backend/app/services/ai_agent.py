@@ -57,7 +57,7 @@ REGLAS CRÍTICAS:
                 "temperature": 0.2,
                 "topK": 40,
                 "topP": 0.95,
-                "maxOutputTokens": 2048
+                "maxOutputTokens": 8192
             }
         }
 
